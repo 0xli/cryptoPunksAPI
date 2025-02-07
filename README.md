@@ -20,6 +20,8 @@ The REST API to the cryptopunks API is described below.
 
     http://localhost:1337/api/punks/
     https://cryptopunks.herokuapp.com/api/punks
+    return:
+    [{"id":"9687","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk9687.png","accessories":["Cap","Horned Rim Glasses","Normal Beard"]},{"id":"7902","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk7902.png","accessories":["Shadow Beard","Horned Rim Glasses","Pipe","Mohawk Dark"]},{"id":"6974","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk6974.png","accessories":["Cap Forward","Horned Rim Glasses","Big Beard"]},{"id":"6172","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk6172.png","accessories":["Normal Beard Black","Earring","Nerd Glasses","Mohawk"]},{"id":"6380","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk6380.png","accessories":["Front Beard Dark","Earring","Nerd Glasses","Do-rag"]}]
 
 `GET /punks/filter/any/beard,glasses?limit=5`
 
@@ -32,6 +34,8 @@ The REST API to the cryptopunks API is described below.
 
     http://localhost:1337/api/punks/:id
     https://cryptopunks.herokuapp.com/api/punks/:id
+    return:
+    {"type":"Female","image":"https://www.larvalabs.com/cryptopunks/cryptopunk100.png","accessories":["Tassle Hat"]}
 
 ## Get all Types and Accessories
 

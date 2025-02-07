@@ -6,11 +6,12 @@
     "moduleResolution": "node",
     "module": "commonjs",
     "sourceMap": true,
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
     "lib": ["esnext", "dom", "es2018", "esnext.asynciterable"],
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
+  "include": ["src", "cryptoPunkData.json"],
   "exclude": ["node_modules"]
 }
