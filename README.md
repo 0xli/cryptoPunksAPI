@@ -8,6 +8,13 @@
 
     yarn run dev
 
+## Run the app with SSL
+
+    PORT=1337
+    SSL_KEY=ssl/server.key
+    SSL_CERT=ssl/server.cert
+    yarn run dev
+
 # Punks API
 
 The REST API to the cryptopunks API is described below.
