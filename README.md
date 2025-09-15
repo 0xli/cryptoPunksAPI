@@ -15,6 +15,23 @@
     SSL_CERT=ssl/server.cert
     yarn run dev
 
+## Configuration
+
+The API supports multiple image sources for CryptoPunk images. You can configure the default image source in `config.js`:
+
+```javascript
+module.exports = {
+  imageSource: 'cryptopunks.app', // Options: 'cryptopunks.app', 'larvalabs'
+};
+```
+
+### Image Sources
+
+- **cryptopunks.app** (default): Uses `https://www.cryptopunks.app/images/cryptopunks/punk{ID}.png` with 4-digit zero-padding
+- **larvalabs**: Uses `https://www.larvalabs.com/cryptopunks/cryptopunk{ID}.png` without padding
+
+The API automatically handles ID padding for the cryptopunks.app source (e.g., punk 101 becomes punk0101).
+
 # Punks API
 
 The REST API to the cryptopunks API is described below.
@@ -28,7 +45,7 @@ The REST API to the cryptopunks API is described below.
     http://localhost:1337/api/punks/
     https://cryptopunks.herokuapp.com/api/punks
     return:
-    [{"id":"9687","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk9687.png","accessories":["Cap","Horned Rim Glasses","Normal Beard"]},{"id":"7902","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk7902.png","accessories":["Shadow Beard","Horned Rim Glasses","Pipe","Mohawk Dark"]},{"id":"6974","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk6974.png","accessories":["Cap Forward","Horned Rim Glasses","Big Beard"]},{"id":"6172","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk6172.png","accessories":["Normal Beard Black","Earring","Nerd Glasses","Mohawk"]},{"id":"6380","type":"Male","image":"https://www.larvalabs.com/cryptopunks/cryptopunk6380.png","accessories":["Front Beard Dark","Earring","Nerd Glasses","Do-rag"]}]
+    [{"id":"9687","type":"Male","image":"https://www.cryptopunks.app/images/cryptopunks/punk9687.png","accessories":["Cap","Horned Rim Glasses","Normal Beard"]},{"id":"7902","type":"Male","image":"https://www.cryptopunks.app/images/cryptopunks/punk7902.png","accessories":["Shadow Beard","Horned Rim Glasses","Pipe","Mohawk Dark"]},{"id":"6974","type":"Male","image":"https://www.cryptopunks.app/images/cryptopunks/punk6974.png","accessories":["Cap Forward","Horned Rim Glasses","Big Beard"]},{"id":"6172","type":"Male","image":"https://www.cryptopunks.app/images/cryptopunks/punk6172.png","accessories":["Normal Beard Black","Earring","Nerd Glasses","Mohawk"]},{"id":"6380","type":"Male","image":"https://www.cryptopunks.app/images/cryptopunks/punk6380.png","accessories":["Front Beard Dark","Earring","Nerd Glasses","Do-rag"]}]
 
 `GET /punks/filter/any/beard,glasses?limit=5`
 
@@ -42,7 +59,7 @@ The REST API to the cryptopunks API is described below.
     http://localhost:1337/api/punks/:id
     https://cryptopunks.herokuapp.com/api/punks/:id
     return:
-    {"type":"Female","image":"https://www.larvalabs.com/cryptopunks/cryptopunk100.png","accessories":["Tassle Hat"]}
+    {"type":"Female","image":"https://www.cryptopunks.app/images/cryptopunks/punk0100.png","accessories":["Tassle Hat"]}
 
 ## Get all Types and Accessories
 

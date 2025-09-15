@@ -8,6 +8,26 @@ import { BasePunk, Punk, CryptoPunkData } from './punk.interface';
 import cryptoPunkData from '../../cryptoPunkData.json';
 
 /**
+ * Configuration
+ */
+const config = require('../../config.js');
+
+/**
+ * Image URL Generation
+ */
+const generateImageUrl = (id: string): string => {
+  const paddedId = id.padStart(4, '0');
+  
+  switch (config.imageSource) {
+    case 'cryptopunks.app':
+      return `https://www.cryptopunks.app/images/cryptopunks/punk${paddedId}.png`;
+    case 'larvalabs':
+    default:
+      return `https://www.larvalabs.com/cryptopunks/cryptopunk${id}.png`;
+  }
+};
+
+/**
  * Router Definition
  */
 
@@ -88,7 +108,8 @@ punksRouter.get('/filter/:type/:accessories', async (req: Request, res: Response
       .slice(0, limit)
       .map(([id, punk]) => ({
         id,
-        ...punk
+        ...punk,
+        image: generateImageUrl(id)
       }));
 
     res.status(200).json(randomPunks);
