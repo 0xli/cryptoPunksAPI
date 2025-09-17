@@ -21,16 +21,19 @@ The API supports multiple image sources for CryptoPunk images. You can configure
 
 ```javascript
 module.exports = {
-  imageSource: 'cryptopunks.app', // Options: 'cryptopunks.app', 'larvalabs'
+  imageSource: 'alchemy', // Options: 'cryptopunks.app', 'larvalabs', 'opensea', 'opensea-cdn', 'alchemy'
 };
 ```
 
 ### Image Sources
 
-- **cryptopunks.app** (default): Uses `https://www.cryptopunks.app/images/cryptopunks/punk{ID}.png` with 4-digit zero-padding
+- **alchemy** (default): Uses Alchemy API to fetch high-quality images with automatic caching (best quality, free)
+- **opensea-cdn**: Uses high-quality OpenSea CDN images (requires API key)
+- **cryptopunks.app**: Uses `https://www.cryptopunks.app/images/cryptopunks/punk{ID}.png` with 4-digit zero-padding
 - **larvalabs**: Uses `https://www.larvalabs.com/cryptopunks/cryptopunk{ID}.png` without padding
+- **opensea**: Uses OpenSea marketplace URLs (returns HTML pages)
 
-The API automatically handles ID padding for the cryptopunks.app source (e.g., punk 101 becomes punk0101).
+The API automatically handles ID padding for sources that require it (cryptopunks.app) and caches high-quality images for future use.
 
 # Punks API
 

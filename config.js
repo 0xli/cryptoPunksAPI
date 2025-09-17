@@ -1,3 +1,3 @@
 module.exports = {
-  imageSource: 'cryptopunks.app', // Options: 'cryptopunks.app', 'larvalabs'
+  imageSource: 'alchemy', // Options: 'cryptopunks.app', 'larvalabs', 'opensea', 'opensea-cdn', 'alchemy'
 };
