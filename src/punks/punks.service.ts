@@ -115,11 +115,14 @@ const generateImageUrl = async (id: string): Promise<string> => {
 /**
  * Transform punk data with dynamic image URL
  */
-const transformPunk = async (id: string, punk: BasePunk): Promise<Punk> => ({
-  id,
-  ...punk,
-  image: await generateImageUrl(id)
-});
+const transformPunk = async (id: string, punk: BasePunk): Promise<Punk> => {
+  const imageUrl = await generateImageUrl(id);
+  return {
+    id,
+    ...punk,
+    image: imageUrl
+  };
+};
 
 /**
  * Service Methods
