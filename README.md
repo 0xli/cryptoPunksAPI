@@ -259,18 +259,19 @@ The API automatically converts Alchemy SVG images to PNG format for better compa
 
 ### Quality Comparison
 
-| Source | Format | Size | Quality | Compatibility |
-|--------|--------|------|---------|---------------|
-| **Alchemy PNG** | PNG | 226 bytes | ⭐⭐⭐⭐⭐ Excellent | ✅ Universal |
-| **cryptopunks.app** | PNG | 235 bytes | ⭐⭐⭐⭐ Good | ✅ Universal |
-| **Alchemy SVG** | SVG | 17KB | ⭐⭐⭐⭐⭐ Excellent | ⚠️ Limited |
+| Source | Format | Size | Resolution | Quality | Compatibility |
+|--------|--------|------|------------|---------|---------------|
+| **Alchemy PNG** | PNG | 226 bytes | 24x24 | ⭐⭐⭐⭐⭐ Excellent | ✅ Universal |
+| **cryptopunks.app** | PNG | 235 bytes | 24x24 | ⭐⭐⭐⭐ Good | ✅ Universal |
+| **Alchemy SVG** | SVG | 17KB | 24x24 | ⭐⭐⭐⭐⭐ Excellent | ⚠️ Limited |
 
 **Alchemy PNG advantages:**
-- ✅ **Better compression** (226 vs 235 bytes)
+- ✅ **Better compression** (226 vs 235 bytes - 4% smaller)
 - ✅ **Direct from blockchain** (authentic source)
 - ✅ **CDN delivery** (faster loading)
 - ✅ **Automatic conversion** (no manual processing)
 - ✅ **Higher reliability** (enterprise-grade infrastructure)
+- ⚠️ **Same resolution** (24x24 pixels - no improvement)
 
 ### Conversion Process
 
