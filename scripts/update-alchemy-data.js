@@ -72,8 +72,8 @@ const fetchHighQualityImageUrl = async (id, retries = MAX_RETRIES) => {
       
       if (response.ok) {
         const data = await response.json();
-        if (data.image?.cachedUrl) {
-          console.log(`✅ Found high-quality image for punk ${id} (attempt ${attempt})`);
+        if (data.image?.cachedUrl) { // Use SVG URL
+          console.log(`✅ Found high-quality SVG image for punk ${id} (attempt ${attempt})`);
           return data.image.cachedUrl;
         }
       }

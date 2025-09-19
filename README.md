@@ -240,20 +240,20 @@ node scripts/update-alchemy-data.js
 - Save progress frequently to avoid losing work
 
 ### Data Files
-- **`cryptoPunkData-Alchemy.json`**: Complete dataset with Alchemy PNG URLs (used when `IMAGE_SOURCE=alchemy`)
+- **`cryptoPunkData-Alchemy.json`**: Complete dataset with Alchemy SVG URLs (used when `IMAGE_SOURCE=alchemy`)
 - **`openseaCdnMapping.json`**: URL mapping cache (used for fallback and updates)
 - **`cryptoPunkData.json`**: Original dataset (used for other image sources)
 
-## PNG Conversion Process
+## Image Format
 
-The API automatically converts Alchemy SVG images to PNG format for better compatibility with applications that don't support SVG.
+The API uses **SVG images** from Alchemy for optimal quality and authenticity.
 
-### Conversion Details
+### Image Details
 
-- **Source Format**: SVG (from Alchemy API)
-- **Target Format**: PNG (via Cloudinary conversion)
+- **Format**: SVG (Scalable Vector Graphics)
+- **Source**: Direct from blockchain via Alchemy API
 - **Resolution**: 24x24 pixels (original CryptoPunks resolution)
-- **File Size**: ~226 bytes (optimized)
+- **File Size**: ~17KB per image
 - **Quality**: High-quality pixel art with crisp edges
 - **Transparency**: Supported
 
@@ -261,25 +261,15 @@ The API automatically converts Alchemy SVG images to PNG format for better compa
 
 | Source | Format | Size | Resolution | Quality | Compatibility |
 |--------|--------|------|------------|---------|---------------|
-| **Alchemy PNG** | PNG | 226 bytes | 24x24 | ⭐⭐⭐⭐⭐ Excellent | ✅ Universal |
-| **cryptopunks.app** | PNG | 235 bytes | 24x24 | ⭐⭐⭐⭐ Good | ✅ Universal |
 | **Alchemy SVG** | SVG | 17KB | 24x24 | ⭐⭐⭐⭐⭐ Excellent | ⚠️ Limited |
+| **cryptopunks.app** | PNG | 235 bytes | 24x24 | ⭐⭐⭐⭐ Good | ✅ Universal |
 
-**Alchemy PNG advantages:**
-- ✅ **Better compression** (226 vs 235 bytes - 4% smaller)
+**Alchemy SVG advantages:**
 - ✅ **Direct from blockchain** (authentic source)
 - ✅ **CDN delivery** (faster loading)
-- ✅ **Automatic conversion** (no manual processing)
 - ✅ **Higher reliability** (enterprise-grade infrastructure)
-- ⚠️ **Same resolution** (24x24 pixels - no improvement)
-
-### Conversion Process
-
-1. **Fetch SVG** from Alchemy API (`cachedUrl`)
-2. **Convert to PNG** via Cloudinary (`pngUrl`)
-3. **Validate** PNG URL accessibility
-4. **Cache** PNG URL in mapping file
-5. **Fallback** to SVG if PNG conversion fails
+- ✅ **Vector format** (scalable without quality loss)
+- ⚠️ **SVG compatibility** (requires SVG support in client)
 
 ### Technical Implementation
 
@@ -288,7 +278,6 @@ The API automatically converts Alchemy SVG images to PNG format for better compa
 {
   "image": {
     "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/...", // SVG
-    "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/...", // PNG
     "contentType": "image/svg+xml",
     "size": 17824
   }
@@ -298,29 +287,10 @@ The API automatically converts Alchemy SVG images to PNG format for better compa
 ### Cost Analysis
 
 - **Alchemy API**: Free tier (10 requests/second)
-- **Cloudinary Conversion**: Free (included with Alchemy)
 - **CDN Delivery**: Free (included with Alchemy)
 - **Storage**: Free (handled by Alchemy infrastructure)
 
-**Total Cost: $0** - No additional charges for PNG conversion or delivery.
-
-### Converting Existing Data to PNG
-
-If you have existing SVG URLs and want to convert them to PNG format:
-
-```bash
-# Convert existing SVG URLs to PNG URLs
-ALCHEMY_API_KEY=your_key node scripts/convert-to-png.js
-```
-
-This script will:
-- ✅ Test each PNG URL for accessibility
-- ✅ Convert SVG URLs to PNG format
-- ✅ Keep SVG URLs as fallback if PNG fails
-- ✅ Update both mapping and data files
-- ✅ Provide detailed progress reporting
-
-**Results**: 9,886 PNG URLs + 114 SVG fallbacks = 100% coverage
+**Total Cost: $0** - No additional charges for image delivery.
 
 ### Higher Resolution Limitations
 

@@ -52,13 +52,13 @@ const fetchHighQualityImageUrl = async (id: string, retries: number = 3): Promis
       
       clearTimeout(timeoutId);
       
-      if (response.ok) {
-        const data = await response.json();
-        if (data.image?.cachedUrl) {
-          console.log(`Found high-quality image for punk ${id} via Alchemy (attempt ${attempt})`);
-          return data.image.cachedUrl;
-        }
-      }
+             if (response.ok) {
+               const data = await response.json();
+               if (data.image?.cachedUrl) {
+                 console.log(`Found high-quality SVG image for punk ${id} via Alchemy (attempt ${attempt})`);
+                 return data.image.cachedUrl;
+               }
+             }
       
       // If not successful and not the last attempt, wait before retrying
       if (attempt < retries) {
