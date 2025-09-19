@@ -322,6 +322,17 @@ This script will:
 
 **Results**: 9,886 PNG URLs + 114 SVG fallbacks = 100% coverage
 
+### Higher Resolution Limitations
+
+**⚠️ Important Finding**: Higher resolution conversions (96x96, 128x128, etc.) are **not recommended** because:
+
+- **CryptoPunks are 24x24 pixel art** - each pixel is a separate SVG rectangle
+- **Upscaling creates blurry results** - no quality improvement
+- **Wastes bandwidth** - 22x-82x larger file sizes for no benefit
+- **Same visual quality** as 24x24 original
+
+**Recommendation**: Stick with 24x24 resolution for optimal quality and efficiency.
+
 ## Data
 
 The cryptoPunkData.json contains a complete 10,000 entry object including every CryptoPunk.
