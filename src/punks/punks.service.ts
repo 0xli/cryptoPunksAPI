@@ -6,6 +6,7 @@ import { BasePunk, Punk } from './punk.interface';
 import { Punks } from './punks.interface';
 import * as fs from 'fs';
 import * as path from 'path';
+import 'dotenv/config';
 
 /**
  * Configuration
@@ -15,7 +16,11 @@ const config = require('../../config.js');
 /**
  * In-Memory Store
  */
-const punks = require('../../cryptoPunkData.json');
+// Load appropriate data based on config
+const punks = config.imageSource === 'alchemy' 
+  ? require('../../cryptoPunkData-Alchemy.json')
+  : require('../../cryptoPunkData.json');
+
 const openseaCdnMappingPath = path.join(__dirname, '../../openseaCdnMapping.json');
 let openseaCdnMapping = require('../../openseaCdnMapping.json');
 
@@ -31,7 +36,7 @@ const fetchHighQualityImageUrl = async (id: string, retries: number = 3): Promis
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       // Try Alchemy API first (free, no auth required)
-      const alchemyUrl = `https://eth-mainnet.g.alchemy.com/nft/v3/demo/getNFTMetadata?contractAddress=0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb&tokenId=${id}`;
+      const alchemyUrl = `https://eth-mainnet.g.alchemy.com/nft/v3/${process.env.ALCHEMY_API_KEY}/getNFTMetadata?contractAddress=0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb&tokenId=${id}`;
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
@@ -159,6 +164,16 @@ const generateImageUrl = async (id: string): Promise<string> => {
  * Transform punk data with dynamic image URL
  */
 export const transformPunk = async (id: string, punk: BasePunk): Promise<Punk> => {
+  // If using alchemy data, the image URL is already correct
+  if (config.imageSource === 'alchemy') {
+    return {
+      id,
+      ...punk,
+      image: punk.image // Use the image URL directly from the data
+    };
+  }
+  
+  // For other configs, generate the image URL
   const imageUrl = await generateImageUrl(id);
   return {
     id,

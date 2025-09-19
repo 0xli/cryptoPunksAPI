@@ -17,11 +17,29 @@
 
 ## Configuration
 
-The API supports multiple image sources for CryptoPunk images. You can configure the default image source in `config.js`:
+### Environment Variables
+
+Create a `.env.local` file in the project root to configure your API keys and settings:
+
+```bash
+# Alchemy API Configuration
+# Get your API key from: https://dashboard.alchemy.com/
+ALCHEMY_API_KEY=your_alchemy_api_key_here
+
+# Image Source Configuration
+# Options: 'cryptopunks.app', 'larvalabs', 'opensea', 'opensea-cdn', 'alchemy'
+IMAGE_SOURCE=alchemy
+```
+
+**Note:** The `.env.local` file is already included in `.gitignore` and will not be committed to version control.
+
+### Image Source Configuration
+
+The API supports multiple image sources for CryptoPunk images. You can configure the default image source via environment variable or in `config.js`:
 
 ```javascript
 module.exports = {
-  imageSource: 'alchemy', // Options: 'cryptopunks.app', 'larvalabs', 'opensea', 'opensea-cdn', 'alchemy'
+  imageSource: process.env.IMAGE_SOURCE || 'alchemy', // Options: 'cryptopunks.app', 'larvalabs', 'opensea', 'opensea-cdn', 'alchemy'
 };
 ```
 
@@ -170,6 +188,62 @@ GET /api/punks/filter/zombie/any?limit=5
   "Welding Goggles", "Wild Blonde", "Wild Hair", "Wild White Hair"
 ]
 ```
+
+## Updating Alchemy Data
+
+The API uses pre-fetched high-quality image URLs from Alchemy to ensure fast response times. The data is stored in `cryptoPunkData-Alchemy.json` and `openseaCdnMapping.json`.
+
+### Current Status
+- **Total Alchemy URLs:** 10,000 (100% coverage)
+- **Data File:** `cryptoPunkData-Alchemy.json` contains all punks with Alchemy URLs
+- **Mapping File:** `openseaCdnMapping.json` contains the URL mappings
+
+### Updating the Data
+
+Use the provided TypeScript script to update Alchemy image URLs:
+
+```bash
+# Using npm
+npm run update-alchemy-data
+
+# Using yarn
+yarn update-alchemy-data
+
+# Using node directly
+node scripts/update-alchemy-data.js
+```
+
+#### Prerequisites
+- Set `ALCHEMY_API_KEY` in your `.env.local` file
+- Ensure you have the required dependencies installed (`yarn install`)
+
+#### What the Script Does
+- ✅ Fetches missing high-quality image URLs from Alchemy API
+- ✅ Implements proper rate limiting (10 requests/second)
+- ✅ Includes retry logic with exponential backoff
+- ✅ Saves progress after each batch (50 punks)
+- ✅ Updates both `openseaCdnMapping.json` and `cryptoPunkData-Alchemy.json`
+- ✅ Provides detailed progress logging
+
+#### Script Features
+- **Batch Processing**: Processes punks in batches of 50
+- **Rate Limiting**: 100ms delay between requests (respects API limits)
+- **Retry Logic**: Up to 3 attempts with exponential backoff
+- **Progress Saving**: Saves progress after each batch to prevent data loss
+- **Error Handling**: Comprehensive error handling and logging
+- **TypeScript**: Fully typed for better development experience
+
+### Rate Limiting
+- The Alchemy API has rate limits (typically 10 requests/second for free tier)
+- Always implement proper rate limiting and retry logic
+- Use exponential backoff for failed requests
+- Save progress frequently to avoid losing work
+
+### Data Files
+- **`cryptoPunkData-Alchemy.json`**: Complete dataset with Alchemy URLs (used when `IMAGE_SOURCE=alchemy`)
+- **`openseaCdnMapping.json`**: URL mapping cache (used for fallback and updates)
+- **`cryptoPunkData.json`**: Original dataset (used for other image sources)
+
 ## Data
 
 The cryptoPunkData.json contains a complete 10,000 entry object including every CryptoPunk.

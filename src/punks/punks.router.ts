@@ -6,6 +6,7 @@ import express, { Request, Response } from 'express';
 import * as PunkService from './punks.service';
 import { BasePunk, Punk, CryptoPunkData } from './punk.interface';
 import cryptoPunkData from '../../cryptoPunkData.json';
+import cryptoPunkDataAlchemy from '../../cryptoPunkData-Alchemy.json';
 import openseaCdnMapping from '../../openseaCdnMapping.json';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -17,25 +18,12 @@ const config = require('../../config.js');
 const openseaCdnMappingPath = path.join(__dirname, '../../openseaCdnMapping.json');
 
 /**
- * Generate image URL based on config
+ * Get the appropriate data based on config
  */
-const generateImageUrl = async (id: string): Promise<string> => {
-  const paddedId = id.padStart(4, '0');
-  
-  switch (config.imageSource) {
-    case 'cryptopunks.app':
-      return `https://www.cryptopunks.app/images/cryptopunks/punk${paddedId}.png`;
-    case 'larvalabs':
-      return `https://www.larvalabs.com/cryptopunks/cryptopunk${id}.png`;
-    case 'opensea':
-      return `https://opensea.io/assets/ethereum/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/${id}`;
-    case 'alchemy':
-      // Use cached mapping if available, otherwise fallback
-      return openseaCdnMapping[id] || `https://www.cryptopunks.app/images/cryptopunks/punk${paddedId}.png`;
-    default:
-      return `https://www.cryptopunks.app/images/cryptopunks/punk${paddedId}.png`;
-  }
+const getPunkData = (): CryptoPunkData => {
+  return config.imageSource === 'alchemy' ? cryptoPunkDataAlchemy : cryptoPunkData;
 };
+
 
 
 /**
@@ -61,8 +49,9 @@ punksRouter.get('/', async (req: Request, res: Response) => {
 // GET all available types
 punksRouter.get('/types', async (req: Request, res: Response) => {
   try {
+    const punkData = getPunkData();
     const types = new Set(
-      Object.values(cryptoPunkData as CryptoPunkData).map(punk => punk.type)
+      Object.values(punkData as CryptoPunkData).map(punk => punk.type)
     );
     res.status(200).json(Array.from(types));
   } catch (e) {
@@ -73,8 +62,9 @@ punksRouter.get('/types', async (req: Request, res: Response) => {
 // GET all available accessories
 punksRouter.get('/accessories', async (req: Request, res: Response) => {
   try {
+    const punkData = getPunkData();
     const accessories = new Set(
-      Object.values(cryptoPunkData as CryptoPunkData)
+      Object.values(punkData as CryptoPunkData)
         .flatMap(punk => punk.accessories)
         .filter(acc => acc) // Remove empty accessories
     );
@@ -100,9 +90,12 @@ punksRouter.get('/filter/:type/:accessories', async (req: Request, res: Response
       ? []
       : accessories.split(',').map(a => a.trim().toLowerCase());
 
-    // First filter the punks
-    const filteredPunks = Object.entries(cryptoPunkData as CryptoPunkData)
-      .filter(([_, punk]) => {
+    // Get the appropriate data directly (no processing needed)
+    const punkData = getPunkData();
+    
+    // Filter the punks directly from the data
+    const filteredPunks = Object.entries(punkData as CryptoPunkData)
+      .filter(([id, punk]) => {
         if (normalizedType && punk.type !== normalizedType) return false;
         if (requestedAccessories.length === 0) return true;
         
@@ -113,19 +106,14 @@ punksRouter.get('/filter/:type/:accessories', async (req: Request, res: Response
         );
       });
 
-    // Randomly select 'limit' number of punks
-    const selectedPunks = filteredPunks
+    // Randomly select 'limit' number of punks and format response
+    const randomPunks = filteredPunks
       .sort(() => Math.random() - 0.5) // Shuffle array
-      .slice(0, limit);
-
-    // Generate image URLs for all selected punks
-    const randomPunks = await Promise.all(
-      selectedPunks.map(async ([id, punk]) => ({
+      .slice(0, limit)
+      .map(([id, punk]) => ({
         id,
-        ...punk,
-        image: await generateImageUrl(id)
-      }))
-    );
+        ...punk
+      }));
 
     res.status(200).json(randomPunks);
   } catch (e) {
