@@ -212,6 +212,16 @@ const processBatch = async (batch: [string, BasePunk][]): Promise<Punk[]> => {
  */
 
 export const findAll = async (): Promise<Punk[]> => {
+  // If using Alchemy data, the images are already processed - no need to transform
+  if (config.imageSource === 'alchemy') {
+    console.log('Using pre-processed Alchemy data - skipping transformation');
+    return Object.entries(punks).map(([id, punk]) => ({
+      id,
+      ...punk
+    })) as Punk[];
+  }
+  
+  // For other configs, process in batches
   const punkEntries = Object.entries(punks);
   const batchSize = 50; // Process 50 punks at a time
   const allTransformedPunks: Punk[] = [];
@@ -238,5 +248,14 @@ export const findAll = async (): Promise<Punk[]> => {
 export const find = async (id: string): Promise<Punk> => {
   const punk = punks[id];
   if (!punk) return null;
+  
+  // If using Alchemy data, the image is already processed - no need to transform
+  if (config.imageSource === 'alchemy') {
+    return {
+      id,
+      ...punk
+    } as Punk;
+  }
+  
   return await transformPunk(id, punk as BasePunk);
 };
